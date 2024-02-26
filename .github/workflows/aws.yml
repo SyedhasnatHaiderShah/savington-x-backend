@@ -20,7 +20,7 @@ jobs:
       run: docker build -t savington-x-backend .
 
     - name: SSH into EC2 and Deploy
-      uses: appleboy/ssh-action@v0.6.1
+      uses: haythem/ssh-action@v2
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
