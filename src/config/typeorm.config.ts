@@ -25,7 +25,7 @@ export const getDatabaseDataSourceOptions = ({
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
   host: '65.0.21.91',
-  port: 5432,
+  port: 5444,
   username: 'prod_admin',
   password: 'SavingTon@DB',
   database: 'savington-dev',
