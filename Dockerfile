@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Expose the port on which the app will run
-EXPOSE 3000
+EXPOSE 8000
 
 # Define the command to start your application in prod mode
 ENTRYPOINT ["npm", "run", "start:prod"]
