@@ -2,7 +2,7 @@
 FROM node:18-alpine
 
 # Set the working directory in the container
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Copy application dependency manifests to the container image
 COPY package*.json ./
@@ -17,4 +17,4 @@ COPY . .
 RUN npm run build
 
 # Define the command to start your application in prod mode
-ENTRYPOINT ["/bin/sh", "-c", "npm run start:prod"]
+ENTRYPOINT ["npm", "run", "start:prod"]
