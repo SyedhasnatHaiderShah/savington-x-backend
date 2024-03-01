@@ -1,23 +1,20 @@
-# Base image
-FROM node:16
+# Use a Node.js Alpine-based image for the development stage
+FROM node:18-alpine
 
-# Create app directory
-WORKDIR /app
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# Copy application dependency manifests to the container image
 COPY package*.json ./
 
-# Install app dependencies
+# Install application dependencies using `npm install`
 RUN npm install
 
-# Bundle app source
+# Copy the rest of the application code to the container
 COPY . .
 
-# Creates a "dist" folder with the production build
+# Build the application 
 RUN npm run build
 
-# Expose the port on which the app will run
-EXPOSE 3000
-
-# Start the server using the production build
-CMD ["npm", "run", "start:prod"]
+# Define the command to start your application in prod mode
+ENTRYPOINT ["/bin/sh", "-c", "npm run start:prod"]
