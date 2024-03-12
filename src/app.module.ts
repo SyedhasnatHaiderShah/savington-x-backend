@@ -14,6 +14,8 @@ import { PolicyModule } from './components/policy/policy.module';
 import { InsuranceCompanySeeder } from './components/insurancecompanies/entities/insurancecompany.seeder';
 import { InsuranceCompany } from './components/insurancecompanies/entities/insurancecompany.entity';
 import { TamaraModule } from './tamara/tamara.module';
+import { FileModule } from './upload/file.module';
+
 
 @Module({
   imports: [
@@ -28,7 +30,9 @@ import { TamaraModule } from './tamara/tamara.module';
     MotorQuoteModule,
     PolicyModule,
     TypeOrmModule.forFeature([InsuranceCompany]),
-    TamaraModule
+    TamaraModule,
+    FileModule,
+    // MulterConfigModule,
   ],
   providers: [InsuranceCompanySeeder],
 })

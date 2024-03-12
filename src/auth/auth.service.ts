@@ -16,6 +16,9 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<any> {
     return await this.usersService.findOne(email, password);
   }
+   async decodeUser(token: string): Promise<any> {
+    return await this.jwtService.decode(token);
+  }
 
   async signToken(user: User) {
     const payload = { email: user.userEmail, sub: user.userId };
@@ -47,6 +50,6 @@ export class AuthService {
     }
 
     const token = await this.signToken(user);
-    return new UserLoginResponseDto(user, token.token);
+    return new UserLoginResponseDto(user, token.token , true, 'login Successfully' );
 }
 }

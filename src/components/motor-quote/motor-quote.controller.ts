@@ -16,8 +16,12 @@ export class MotorQuoteController {
 //   }
 
   @Get('getQuotaionList/:id')
-  async findAllByQuotationId(@Param('id') id: number): Promise<ResponseDto> {
+  async findQuotaionById(@Param('id') id: number): Promise<ResponseDto> {
     return this.motorQuoteService.findAllByQuotationId(id);
+  }
+  @Get('quotaion/:id')
+  async findAllByQuotationId(@Param('id') id: number): Promise<ResponseDto> {
+    return this.motorQuoteService.findQuotationById(id);
   }
 
   @Post()

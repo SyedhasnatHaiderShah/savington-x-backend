@@ -8,6 +8,8 @@ import { ResponseDto } from '../motor-insurance-rate/dto/motor-insurance-rate.dt
 @Injectable()
 export class MotorQuoteService {
   constructor(
+    // @InjectRepository(MotorQuoteRepository)
+    // private readonly motorQuoteRepository: MotorQuoteRepository,
     @InjectRepository(MotorQuote)
     private readonly motorQuoteRepository: Repository<MotorQuote>,
   ) {}
@@ -16,6 +18,22 @@ export class MotorQuoteService {
     return this.motorQuoteRepository.find();
   }
 
+  async findQuotationById(id: number): Promise<ResponseDto> {
+    const tempData = await this.motorQuoteRepository.find({
+        where :{id}
+    });
+    let message = "Got Quotation successfully."
+    let isSuccess = true
+    if(!tempData || tempData.length<=0){
+      isSuccess = false,
+      message ="No quotation found."
+    }
+    return {
+        data : tempData,
+        isSuccess : isSuccess,
+        message: message
+      };
+  }
   async findAllByQuotationId(q_id: number): Promise<ResponseDto> {
     const tempData = await this.motorQuoteRepository.find({
         where :{ref_no : q_id}

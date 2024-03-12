@@ -34,17 +34,17 @@ export class CreateMotorInsuranceRateDto {
 
 
 export class GenerateMotorQuoteDto {
-  @ApiProperty()
+  @ApiProperty({default : 5})
   driveLicenseAge : number;
-  @ApiProperty()
+  @ApiProperty({default : 30})
   age : number;
-  @ApiProperty()
+  @ApiProperty({default : 2023})
   year : number;
-  @ApiProperty()
+  @ApiProperty({default : 'saloon'})
   body_type: string;
-  @ApiProperty()
+  @ApiProperty({default : 4})
   cylinder: number;
-  @ApiProperty()
+  @ApiProperty({default : 30000})
   car_value: number;
 }
 export class ResponseDto {

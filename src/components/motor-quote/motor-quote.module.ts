@@ -6,13 +6,14 @@ import { Coverage } from '../coverages/entities/coverages.entity';
 import { AddOn } from '../addons/entities/addons.entity';
 import { MotorQuote } from './entities/motor-quote.entity';
 import { EncryptionService } from 'src/auth/encryption.service';
+import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([MotorQuote, Coverage, AddOn]),
-    // Add TypeOrmModule.forFeature with entities related to many-to-many relationships
   ],
   controllers: [MotorQuoteController],
   providers: [MotorQuoteService , EncryptionService],
+  exports: [MotorQuoteService],
 })
 export class MotorQuoteModule {}

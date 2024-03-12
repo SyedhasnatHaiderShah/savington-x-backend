@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Req } from '@nestjs/common';
+import { Controller, Post, Body, Get, Req , Headers, Query  } from '@nestjs/common';
 import { Request } from 'express'; // Import Request from 'express'
 import { TamaraService } from './tamara.service';
 import { CheckPaymentOptionsDto, CreateCheckoutSessionDto } from './dto/create-checkout-session.dto/create-checkout-session.dto';
@@ -8,7 +8,7 @@ import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('tamara')
 @ApiTags('Tamara')
-@ApiBearerAuth('accessToken')
+// @ApiBearerAuth('accessToken')
 export class TamaraController {
   constructor(private readonly tamaraService: TamaraService) {}
 
@@ -20,14 +20,16 @@ export class TamaraController {
     return await this.tamaraService.checkPaymentOptions(token, checkPaymentOptions);
   }
 
-  @Post('create-checkout-session')
-  async createCheckoutSession(@Body() createCheckoutSessionDto: CreateCheckoutSessionDto) {
+  @Post('create-session')
+  async createCheckoutSession(
+    @Body() createCheckoutSessionDto: CreateCheckoutSessionDto,
+    @Headers('Authorization') authorizationHeader: string,
+  ) {
     return await this.tamaraService.createCheckoutSession(createCheckoutSessionDto);
   }
-
-  @Post('authorise-order')
-  async authoriseOrder(@Body() authoriseOrderDto: AuthoriseOrderDto) {
-    return await this.tamaraService.authoriseOrder(authoriseOrderDto);
+  @Get('authorise-order')
+  async authoriseOrder(@Query('order_id') orderId: string) {
+    return await this.tamaraService.authoriseOrder({ order_id: orderId });
   }
 
   @Post('capture-order')

@@ -7,6 +7,8 @@ import {
   UsePipes,
   ValidationPipe,
   Req,
+  Get,
+  Query,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
@@ -21,22 +23,23 @@ import { UserLoginRequestDto } from 'src/users/dto/user-login-request.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  // @ApiOperation({
-  //   summary: 'Login as a user',
-  // })
-  // @UsePipes(ValidationPipe)
-  // @UseGuards(LocalAuthGuard)
-  // @Post('/login')
-  // async login(@Req() req: Request) {
-  //   console.log(req)
-  //   return await this.authService.login(req.user);
-  // }
-  @Post('login')
+
+    @Post('login')
     @HttpCode(200)
     @ApiOkResponse({ type: UserLoginResponseDto })
     login(
         @Body() userLoginRequestDto: UserLoginRequestDto,
     ): Promise<UserLoginResponseDto> {
         return this.authService.login(userLoginRequestDto);
+    }
+
+    @Get('decode-token')  // Change from Post to Get
+    @ApiOperation({ summary: 'Decode and check the validity of a JWT token' })
+    @ApiOkResponse({ description: 'Token information', type: Object })
+    decodeToken(@Query('token') token: string): Object {
+      // You may want to add error handling for invalid tokens
+      const decodedToken = this.authService.decodeUser(token);
+  
+      return decodedToken;
     }
 }

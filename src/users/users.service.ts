@@ -1,4 +1,4 @@
-import { Injectable ,HttpException ,HttpStatus} from '@nestjs/common';
+import { Injectable ,HttpException ,HttpStatus, NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -9,12 +9,15 @@ import { UserLoginRequestDto } from './dto/user-login-request.dto';
 import { genSalt, hash, compare } from 'bcrypt';
 import { UserLoginResponseDto } from './dto/user-login-response.dto';
 import { JwtService } from '@nestjs/jwt';
+import { AuthService } from 'src/auth/auth.service';
+import { UpdateUserProfileDto } from './dto/update-user-profile';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private jwtService: JwtService,
   ) {}
 
   async create(createUserDto: RegisterUserDto) {
@@ -65,9 +68,10 @@ export class UsersService {
         where: { userEmail: email },
     });
 }
-async getUser(id: number ) {
+async getUser(authorizationHeader: any ) {
+  let userData = await this.jwtService.verify(authorizationHeader.replace('Bearer ',''));
   const user = await this.userRepository.findOne({
-    where: { userId: id },
+    where: { userEmail: userData?.email},
 });
   if (!user) {
       throw new HttpException(
@@ -78,6 +82,22 @@ async getUser(id: number ) {
   delete user.userPassword;
   delete user.userId;
   return user;
+}
+
+async updateUserProfile(userId: number, updateProfileDto: UpdateUserProfileDto): Promise<User> {
+  const user = await this.userRepository.findOne({
+    where: { userId: userId },
+});
+
+  if (!user) {
+    throw new NotFoundException('User not found');
+  }
+
+  // Update the user profile fields
+  Object.assign(user, updateProfileDto);
+
+  // Save the updated user profile
+  return this.userRepository.save(user);
 }
     
 }

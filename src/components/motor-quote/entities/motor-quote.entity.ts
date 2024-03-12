@@ -7,7 +7,6 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, ManyToMa
 export class MotorQuote {
   @PrimaryGeneratedColumn()
   id: number;
-
   @Column({ type: 'bigint' })
   ref_no: number;
 
@@ -39,4 +38,9 @@ export class MotorQuote {
 
   @Column({ default: false })
   is_deleted: boolean;
+  @Column()
+  company_name: string;
+  
+  @Column()
+  company_logo: string;
 }

@@ -1,131 +1,94 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class CreateCheckoutSessionDto {
-  total_amount: Amount;
-  shipping_amount: Amount;
-  tax_amount: Amount;
-  order_reference_id: string;
-  order_number: string;
-  discount: Discount;
-  items: Item[];
-  consumer: Consumer;
-  country_code: string;
-  description: string;
-  merchant_url: MerchantUrl;
-  payment_type: string;
-  instalments: number;
-  billing_address: Address;
-  shipping_address: Address;
-  platform: string;
-  is_mobile: boolean;
-  locale: string;
-  risk_assessment: RiskAssessment;
-  additional_data: AdditionalData;
-}
 
-class Amount {
+// types.ts
+export class TotalAmount {
+  @ApiProperty({ default: 100 })
   amount: number;
+  @ApiProperty({ default: 'AED' })
   currency: string;
 }
 
-class Discount {
-  amount: Amount;
-  name: string;
+export class DiscountAmount {
+  @ApiProperty({ default: 0 })
+  amount: number;
+  @ApiProperty({ default: 'AED' })
+  currency: string;
 }
 
-class Item {
+export class Item {
+  @ApiProperty({ default: "Insurance" })
   name: string;
+
+  @ApiProperty({ default: "Third party" })
   type: string;
+
+  @ApiProperty({ default: "Q1223213" })
   reference_id: string;
+
+  @ApiProperty({ default: "SKU-213213" })
   sku: string;
+
+  @ApiProperty({ default: 1 })
   quantity: number;
-  discount_amount: Amount;
-  tax_amount: Amount;
-  unit_price: Amount;
-  total_amount: Amount;
+
+  discount_amount: DiscountAmount;
+  total_amount: TotalAmount;
 }
 
-class Consumer {
+export class Consumer {
+  @ApiProperty({ default: 'hasnathaider332@gmail.com' })
   email: string;
+  @ApiProperty({ default: 'Syed' })
   first_name: string;
+  @ApiProperty({ default: 'Shah' })
   last_name: string;
+  @ApiProperty({ default: '568468089' })
   phone_number: string;
 }
 
-class Address {
-  city: string;
-  country_code: string;
+
+
+export class CreateCheckoutSessionDto {
+  @ApiProperty({ default: "Test" })
   first_name: string;
-  last_name: string;
-  line1: string;
-  line2: string;
+  @ApiProperty({ default: "568768899" })
   phone_number: string;
-  region: string;
+  @ApiProperty({ default: "test1@test.com" })
+  email: string;
+  @ApiProperty({ default: "35897" })
+  order_reference_id: string;
+  @ApiProperty({ default: 3762 })
+  order_id: number;
+  @ApiProperty({ default: "PAY_BY_INSTALMENTS" })
+  payment_type: string;
+  @ApiProperty({ default: 4 })
+  instalments: number;
 }
 
-class MerchantUrl {
-  cancel: string;
-  failure: string;
-  success: string;
-  notification: string;
-}
 
-class RiskAssessment {
-  customer_age: number;
-  customer_dob: string;
-  customer_gender: string;
-  customer_nationality: string;
-  is_premium_customer: boolean;
-  is_existing_customer: boolean;
-  is_guest_user: boolean;
-  account_creation_date: string;
-  platform_account_creation_date: string;
-  date_of_first_transaction: string;
-  is_card_on_file: boolean;
-  is_COD_customer: boolean;
-  has_delivered_order: boolean;
-  is_phone_verified: boolean;
-  is_fraudulent_customer: boolean;
-  total_ltv: number;
-  total_order_count: number;
-  order_amount_last3months: number;
-  order_count_last3months: number;
-  last_order_date: string;
-  last_order_amount: number;
-  reward_program_enrolled: boolean;
-  reward_program_points: number;
-  phone_verified: boolean;
-}
 
-class AdditionalData {
-  delivery_method: string;
-  pickup_store: string;
-  store_code: string;
-  vendor_amount: number;
-  merchant_settlement_amount: number;
-  vendor_reference_code: string;
-}
 
 
 class orderValue { 
-    @ApiProperty()
+    @ApiProperty({ default: 100})
     amount: number;
-    @ApiProperty()
+    @ApiProperty({ default: 'AED' })
     currency: string
 }
   
   
 export class CheckPaymentOptionsDto {
-    @ApiProperty()
+    @ApiProperty({ default: 'AE' })
     country: string;
     
-    @ApiProperty()
+    @ApiProperty({ default: '568001234' })
     phone_number: string;
     
     @ApiProperty()
     order_value: orderValue;
     
-    @ApiProperty()
+    @ApiProperty({ default: false })
     is_vip: boolean;
   }
 
