@@ -117,9 +117,9 @@ export class TamaraService {
       country_code: 'AE',
       description: 'Enter order description here.',
       merchant_url: {
-        cancel: 'http://localhost:3000/car-insurance',
-        failure: 'http://localhost:3000/car-insurance',
-        success: 'http://localhost:3000/car-insurance',
+        cancel: 'https://dev.savington-x.ae/car-insurance',
+        failure: 'https://dev.savington-x.ae/car-insurance',
+        success: 'https://dev.savington-x.ae/car-insurance',
         notification: 'https://example-notification.com/payments/tamaranotifications',
       },
       payment_type: createCheckoutSessionDto.payment_type,
