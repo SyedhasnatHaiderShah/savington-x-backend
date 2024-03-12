@@ -1,20 +1,23 @@
-# Use the official Node.js 16 image as the base image
-FROM node:16
+# Use a Node.js Alpine-based image for the development stage
+FROM node:18-alpine
 
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the container
+# Copy application dependency manifests to the container image
 COPY package*.json ./
 
-# Install project dependencies
+# Install application dependencies using `npm install`
 RUN npm install
 
-# Copy the rest of the application source code to the container
+# Copy the rest of the application code to the container
 COPY . .
 
-# Expose the port your Nest.js application is listening on
-EXPOSE 3000
+# Build the application 
+RUN npm run build
 
-# Command to start your Nest.js application
-CMD [ "npm", "run", "start:prod" ]
+# Expose the port on which the app will run
+EXPOSE 8000
+
+# Define the command to start your application in prod mode
+ENTRYPOINT ["npm", "run", "start:prod"]
