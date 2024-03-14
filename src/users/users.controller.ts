@@ -30,26 +30,13 @@ import { extname } from 'path';
 @ApiTags('User')
 @Controller('user')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService ) {}
 
-
-  
   @Post('/signup')
-  // @ApiOperation({
-  //   summary: 'Sign Up as a user',
-  // })
   @UsePipes(ValidationPipe)
   create(@Body() createUserDto: RegisterUserDto) {
     return this.usersService.create(createUserDto);
   }
-
-  // @UseGuards(JwtAuthGuard)
-  // @UseGuards(AuthGuard('jwt'))
-  // @ApiBearerAuth()
-  // @Get('profile')
-  // getProfile(@Request() req) {
-  //   return req.user;
-  // }
 
   @Get('profile')
   @ApiBearerAuth()

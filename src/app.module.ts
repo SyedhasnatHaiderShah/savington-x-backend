@@ -14,8 +14,10 @@ import { PolicyModule } from './components/policy/policy.module';
 import { InsuranceCompanySeeder } from './components/insurancecompanies/entities/insurancecompany.seeder';
 import { InsuranceCompany } from './components/insurancecompanies/entities/insurancecompany.entity';
 import { TamaraModule } from './tamara/tamara.module';
-import { FileModule } from './upload/file.module';
-
+import { MyModuleModule } from './components/my-module/my-module.module';
+import { UserDocumentsModule } from './components/user-documents/user-documents.module';
+import { UserDocumentsService } from './components/user-documents/user-documents.service';
+import { UserDocumentsController } from './components/user-documents/user-documents.controller';
 
 @Module({
   imports: [
@@ -31,9 +33,11 @@ import { FileModule } from './upload/file.module';
     PolicyModule,
     TypeOrmModule.forFeature([InsuranceCompany]),
     TamaraModule,
-    FileModule,
+    MyModuleModule,
+    UserDocumentsModule,
     // MulterConfigModule,
   ],
   providers: [InsuranceCompanySeeder],
+  controllers: [UserDocumentsController],
 })
 export class AppModule {}
