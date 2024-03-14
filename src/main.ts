@@ -27,6 +27,11 @@ async function bootstrap() {
   const reflector = app.get(Reflector);
   app.useGlobalGuards(new RolesGuard(reflector));
 
+  app.enableCors({
+    origin: ['http://localhost:8000', 'https://api.savington-x.ae'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+  });
   // app starts listening on port 3003
   await app.listen(8000);
 }
