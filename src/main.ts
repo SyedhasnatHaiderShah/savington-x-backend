@@ -8,12 +8,13 @@ dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule , { cors: true });
-  app.enableCors();
-  //app.enableCors({
-  // origin: ['http://localhost:8000', 'http://dev.savington-x.ae','https://dev.savington-x.ae', 'https://savington-x.ae' , 'https://www.savington-x.ae'],
-  // methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  // allowedHeaders: 'Content-Type,Authorization',
-  //});
+  // app.enableCors();
+  app.enableCors({
+  origin: ['http://localhost:8000', 'http://dev.savington-x.ae','https://dev.savington-x.ae', 'https://savington-x.ae' , 'https://www.savington-x.ae'],
+  // origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: 'Content-Type,Authorization',
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Savington-x API Documentation')

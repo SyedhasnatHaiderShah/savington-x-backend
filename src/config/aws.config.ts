@@ -9,9 +9,9 @@ export class AwsConfigService {
 
   constructor(private readonly configService: ConfigService) {
     AWS.config.update({
-      accessKeyId: this.configService.get<string>('AWS_ACCESS_KEY_ID'),
-      secretAccessKey: this.configService.get<string>('AWS_SECRET_ACCESS_KEY'),
-      region: this.configService.get<string>('AWS_REGION'),
+      accessKeyId: this.configService.get<string>('ACCESS')+this.configService.get<string>('KEY_ID'),
+      secretAccessKey: this.configService.get<string>('SECRET')+this.configService.get<string>('KEY'),
+      region: this.configService.get<string>('REGION'),
     });
 
     this.s3 = new AWS.S3();
