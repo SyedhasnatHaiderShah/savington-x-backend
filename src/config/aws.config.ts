@@ -9,8 +9,8 @@ export class AwsConfigService {
 
   constructor(private readonly configService: ConfigService) {
     AWS.config.update({
-      accessKeyId: this.configService.get<string>('ACCESS')+this.configService.get<string>('KEY_ID'),
-      secretAccessKey: this.configService.get<string>('SECRET')+this.configService.get<string>('KEY'),
+      accessKeyId: this.configService.get<string>('A_ID')+this.configService.get<string>('KEY_ID'),
+      secretAccessKey: this.configService.get<string>('S_ID')+this.configService.get<string>('KEY'),
       region: this.configService.get<string>('REGION'),
     });
 
