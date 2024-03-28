@@ -42,7 +42,6 @@ export class MotorInsuranceRateService {
 
     const {body_type , cylinder , car_value , year , age } = payload;
     const thirdPartyQuotation = await this.getThirdPartyQuotation(body_type, cylinder , false, true );
-    // console.log('thirdPartyQuotation', thirdPartyQuotation)
     
     if(!thirdPartyQuotation){
       if(!response || response.length <= 0){
@@ -73,13 +72,14 @@ export class MotorInsuranceRateService {
         cylinder,
       },
     });
-  
     if (result) {
+      console.log('Got ')
       const listComp = await this.insuranceCompanyRepository.find({
         where: {
-          id: In([ 2, 3 , 5, 8, 12]),
+          id: In([2, 3 , 5, 8, 12]),
         },
       });
+      // console.log('listComp ', listComp)
   
       const randomNumber = Math.floor(10000 + Math.random() * 90000);
       const ref = randomNumber.toString().substring(0, 9);
@@ -115,7 +115,7 @@ export class MotorInsuranceRateService {
           company_name: item.name,
           company_logo: item.logo,
         };
-        
+        console.log('Ref' , ref)
         await this.motorQuoteRepository.save(temp);
         return temp;
       });

@@ -44,7 +44,11 @@ export class UsersService {
       
       delete createdUser.userId
       delete createdUser.userPassword
-      return createdUser
+      return {
+        isSuccess : true , 
+        message: 'Register User Successfully',
+        statusCode : 200,
+      }
     
   }
 
