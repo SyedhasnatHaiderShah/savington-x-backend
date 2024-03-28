@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule , { cors: true });
   // app.enableCors();
   app.enableCors({
-  origin: ['http://dev.savington-x.ae','https://dev.savington-x.ae', 'https://savington-x.ae' , 'https://www.savington-x.ae'],
+  origin: ['http://localhost:3000','http://dev.savington-x.ae','https://dev.savington-x.ae', 'https://savington-x.ae' , 'https://www.savington-x.ae'],
   // origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: 'Content-Type,Authorization',

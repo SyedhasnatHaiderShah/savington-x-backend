@@ -1,7 +1,7 @@
 // motor-insurance-rate.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Not, Repository, getRepository } from 'typeorm';
+import { In, Not, Repository, getRepository } from 'typeorm';
 import { MotorInsuranceRate } from './entities/motor-insurance-rate.entity';
 import { CreateMotorInsuranceRateDto, GenerateMotorQuoteDto, ResponseDto, UpdateMotorInsuranceRateDto } from './dto/motor-insurance-rate.dto';
 import { InsuranceCompany } from '../insurancecompanies/entities/insurancecompany.entity';
@@ -35,8 +35,7 @@ export class MotorInsuranceRateService {
   }
 
   async generateQuotation(payload : GenerateMotorQuoteDto): Promise<ResponseDto> {
-    console.log('thirdPartyQuotation')
-    
+
     let response : any = []
     let message = "Quotation successfully generated."
     let isSuccess = true
@@ -78,7 +77,7 @@ export class MotorInsuranceRateService {
     if (result) {
       const listComp = await this.insuranceCompanyRepository.find({
         where: {
-          id: Not(0),
+          id: In([ 2, 3 , 5, 8, 12]),
         },
       });
   
