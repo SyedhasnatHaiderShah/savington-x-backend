@@ -92,15 +92,20 @@ export class MotorInsuranceRateService {
         //   where: { company_id : item.id , code : 'TPL' },
         // });
         
-        const addons = await await this.addOnRepository
+        const addons = await this.addOnRepository
+        .createQueryBuilder("user")
+        .where("user.company_id = :company_id and user.code = :code", { company_id: item.id , code: 'TPL' })
+        .getMany();
+        
+        const coverages = await this.coverageRepository
         .createQueryBuilder("user")
         .where("user.company_id = :company_id and user.code = :code", { company_id: item.id , code: 'TPL' })
         .getMany();
 
         
-        const coverages = await this.coverageRepository.find({
-          where: { company_id : item.id , code : 'TPL' },
-        });
+        // const coverages = await this.coverageRepository.find({
+        //   where: { company_id : item.id , code : 'TPL' },
+        // });
         const temp = {
           ref_no: Number(ref),
           excess: 0,
