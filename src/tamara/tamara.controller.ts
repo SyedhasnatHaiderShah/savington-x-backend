@@ -5,6 +5,7 @@ import { CheckPaymentOptionsDto, CreateCheckoutSessionDto } from './dto/create-c
 import { AuthoriseOrderDto } from './dto/authorise-order.dto/authorise-order.dto';
 import { CaptureOrderDto } from './dto/capture-order.dto/capture-order.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { NotificationDto } from './dto/notification.dto';
 
 @Controller('tamara')
 @ApiTags('Tamara')
@@ -27,7 +28,7 @@ export class TamaraController {
   }
   @Get('authorise-order')
   async authoriseOrder(@Query('order_id') orderId: string) {
-    console.log(' Auth orderId', orderId)
+    console.log('Auth orderId', orderId)
     return await this.tamaraService.authoriseOrder({ order_id: orderId });
   }
   // @Post('authorise-order')
@@ -37,10 +38,11 @@ export class TamaraController {
   //   return await this.tamaraService.authoriseOrder({ order_id: payload.order_id });
   // }
   @Post('notification')
+  @ApiBearerAuth()
   async handleNotification(
     @Headers('authorization') authorization: string,
     @Headers('tamaraToken') tamaraToken: string,
-    @Body() payload: any
+    @Body() payload: NotificationDto 
   ) {
     console.log('Authorization Header:', authorization);
     console.log('Tamara Token:', tamaraToken);

@@ -10,8 +10,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule , { cors: true });
   // app.enableCors();
   app.enableCors({
-  origin: ['http://localhost:3000','http://dev.savington-x.ae','https://dev.savington-x.ae', 'https://savington-x.ae' , 'https://www.savington-x.ae'],
-  // origin: '*',
+  // origin: ['http://localhost:3000','http://dev.savington-x.ae','https://dev.savington-x.ae', 'https://savington-x.ae' , 'https://www.savington-x.ae'],
+  origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
   });
@@ -19,7 +19,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Savington-x API Documentation')
     .setDescription('The Savington-x API description - latest')
-    .setVersion('1.0')
+    .setVersion('1.1')
     .addTag('Savington-x')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'accessToken') // Use an object as the first argument
     .build();

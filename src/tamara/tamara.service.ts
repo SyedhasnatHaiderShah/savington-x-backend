@@ -115,7 +115,7 @@ export class TamaraService {
         phone_number: createCheckoutSessionDto?.phone_number,
       },
       country_code: 'AE',
-      description: 'Enter order description here.',
+      description: quote?.insurance_type == 1 ? 'Third Party Motor Insurance' : 'Comprehensive Motor Insurance.',
       // merchant_url: {
       //   cancel: 'http://localhost:3000/car-insurance',
       //   failure: 'http://localhost:3000/car-insurance',
