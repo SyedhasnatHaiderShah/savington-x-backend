@@ -12,10 +12,10 @@ async function bootstrap() {
   app.enableCors({
   // origin: ['http://localhost:3000','http://dev.savington-x.ae','https://dev.savington-x.ae', 'https://savington-x.ae' , 'https://www.savington-x.ae'],
   origin: '*',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: 'Content-Type,Authorization',
+  methods: 'GET,POST',
+  allowedHeaders: '*',
   });
-
+  
   const config = new DocumentBuilder()
     .setTitle('Savington-x API Documentation')
     .setDescription('The Savington-x API description - latest')
