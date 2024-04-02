@@ -57,6 +57,12 @@ interface Amount {
     phone_number: string;
     region: string;
   }
+  interface ShippingInfo {
+    shipped_at: string;
+    shipping_company: string;
+    tracking_number: string;
+    tracking_url: string;
+  }
   
   interface RiskAssessment {
     customer_age: number;
@@ -114,6 +120,15 @@ interface Amount {
     locale: string;
     risk_assessment?: RiskAssessment;
     additional_data?: AdditionalData;
+  }
+  export interface CaptureOrder {
+    order_id: string;
+    total_amount: Amount;
+    items: Item[];
+    discount_amount?: Amount;
+    shipping_amount: Amount;
+    tax_amount: Amount;
+    shipping_info: ShippingInfo;
   }
   
   export default Order;

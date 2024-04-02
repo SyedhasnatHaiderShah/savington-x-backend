@@ -72,7 +72,7 @@ export class MotorInsuranceRateService {
         cylinder,
       },
     });
-    if (result) {
+    // if (result) {
       console.log('Got ')
       const listComp = await this.insuranceCompanyRepository.find({
         where: {
@@ -109,8 +109,8 @@ export class MotorInsuranceRateService {
         const temp = {
           ref_no: Number(ref),
           excess: 0,
-          insurance_type: result.insurance_type,
-          quote_amount: result.rate,
+          insurance_type: result ? result.insurance_type : 1,
+          quote_amount: result ? result.rate : 0,
           quote_date: new Date(),
           coverages: coverages, 
           add_ons: addons, 
@@ -127,9 +127,8 @@ export class MotorInsuranceRateService {
   
       const response = await Promise.all(promises);
       return response;
-    }
-  
-    return null;
+    
+
   }
   
 

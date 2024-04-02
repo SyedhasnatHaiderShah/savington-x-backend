@@ -18,6 +18,7 @@ import { MyModuleModule } from './components/my-module/my-module.module';
 import { UserDocumentsModule } from './components/user-documents/user-documents.module';
 import { UserDocumentsService } from './components/user-documents/user-documents.service';
 import { UserDocumentsController } from './components/user-documents/user-documents.controller';
+import { CarQuotationModule } from './components/car-quotation/car-quotation.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { UserDocumentsController } from './components/user-documents/user-docume
     TamaraModule,
     MyModuleModule,
     UserDocumentsModule,
+    CarQuotationModule,
     // MulterConfigModule,
   ],
   providers: [InsuranceCompanySeeder],

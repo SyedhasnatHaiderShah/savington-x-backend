@@ -15,11 +15,9 @@ export class TamaraController {
   @Post('check-payment-options') 
   async checkPaymentOptions(@Req() request: Request, @Body() checkPaymentOptions: CheckPaymentOptionsDto) {
     const token = request.headers.authorization?.split(' ')[1]; // Assuming Bearer token in the Authorization header
-
     console.log('In Controller', checkPaymentOptions);
     return await this.tamaraService.checkPaymentOptions(token, checkPaymentOptions);
   }
-
   @Post('create-session')
   async createCheckoutSession(
     @Body() createCheckoutSessionDto: CreateCheckoutSessionDto,
@@ -29,7 +27,26 @@ export class TamaraController {
   }
   @Get('authorise-order')
   async authoriseOrder(@Query('order_id') orderId: string) {
+    console.log(' Auth orderId', orderId)
     return await this.tamaraService.authoriseOrder({ order_id: orderId });
+  }
+  // @Post('authorise-order')
+  // async authoriseOrderPost(@Body() payload: any) {
+  //   console.log('Payload:', payload);
+  //   // You can access properties from the payload like payload.order_id, payload.order_reference_id, etc.
+  //   return await this.tamaraService.authoriseOrder({ order_id: payload.order_id });
+  // }
+  @Post('notification')
+  async handleNotification(
+    @Headers('authorization') authorization: string,
+    @Headers('tamaraToken') tamaraToken: string,
+    @Body() payload: any
+  ) {
+    console.log('Authorization Header:', authorization);
+    console.log('Tamara Token:', tamaraToken);
+    console.log('Payload:', payload);
+    // Call the same service method passing necessary data
+    return await this.tamaraService.authoriseOrder({ order_id: payload.order_id });
   }
 
   @Post('capture-order')

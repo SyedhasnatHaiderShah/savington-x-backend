@@ -2,7 +2,7 @@ import { Injectable, UseGuards } from '@nestjs/common';
 import { check } from 'prettier';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { jwtConstants } from 'src/constants/constants';
-import Order from './dto/order.interface';
+import Order, { CaptureOrder } from './dto/order.interface';
 import { Currency } from 'src/enums/role.enum';
 import { CreateCheckoutSessionDto } from './dto/create-checkout-session.dto/create-checkout-session.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -116,11 +116,17 @@ export class TamaraService {
       },
       country_code: 'AE',
       description: 'Enter order description here.',
+      // merchant_url: {
+      //   cancel: 'http://localhost:3000/car-insurance',
+      //   failure: 'http://localhost:3000/car-insurance',
+      //   success: 'http://localhost:3000/car-insurance',
+      //   notification: 'http://localhost:8000/tamara/notification',
+      // },
       merchant_url: {
         cancel: 'https://dev.savington-x.ae/car-insurance',
         failure: 'https://dev.savington-x.ae/car-insurance',
         success: 'https://dev.savington-x.ae/car-insurance',
-        notification: 'https://example-notification.com/payments/tamaranotifications',
+        notification: 'https://dev.savington-x.ae/tamara/notification',
       },
       payment_type: createCheckoutSessionDto.payment_type,
       instalments: createCheckoutSessionDto.instalments,
@@ -149,6 +155,36 @@ export class TamaraService {
       locale: 'en_US',
     };
   }
+  private createCaptureOrderBody(createCheckoutSessionDto: CreateCheckoutSessionDto, quote: MotorQuote , order_id: string): CaptureOrder {
+    return {
+      order_id: order_id,
+      total_amount: { amount: quote?.quote_amount, currency: Currency.default },
+      items: [
+        {
+          name: 'Motor Insurance',
+          type: quote?.insurance_type == 1 ? 'Third Party' : 'Comprehensive',
+          reference_id: createCheckoutSessionDto.order_reference_id,
+          sku: createCheckoutSessionDto.order_reference_id,
+          quantity: 1,
+          discount_amount: { amount: 0, currency: Currency.default },
+          tax_amount: { amount: 0, currency: Currency.default },
+          unit_price: { amount: quote?.quote_amount, currency: Currency.default },
+          total_amount: { amount: quote?.quote_amount, currency: Currency.default },
+        },
+      ],
+      discount_amount: { amount: '0', currency: Currency.default },
+      shipping_amount: { amount: '0', currency: Currency.default },
+      shipping_info: {
+        shipped_at: '',
+        shipping_company: '',
+        tracking_number: '',
+        tracking_url: '',
+      },
+      tax_amount: { amount: '0', currency: Currency.default },
+    };
+  }
+
+
   
   async saveCheckoutSessionInDatabase(createCheckoutSessionDto: CreateCheckoutSessionDto, response : ResponseCreateCheckoutSessionDto): Promise<void> {
     try {
