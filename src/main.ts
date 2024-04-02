@@ -13,9 +13,8 @@ async function bootstrap() {
   // origin: ['http://localhost:3000','http://dev.savington-x.ae','https://dev.savington-x.ae', 'https://savington-x.ae' , 'https://www.savington-x.ae'],
   origin: '*',
   methods: 'GET,POST',
-  allowedHeaders: '*',
+  allowedHeaders: 'Content-Type,Authorization',
   });
-  
   const config = new DocumentBuilder()
     .setTitle('Savington-x API Documentation')
     .setDescription('The Savington-x API description - latest')

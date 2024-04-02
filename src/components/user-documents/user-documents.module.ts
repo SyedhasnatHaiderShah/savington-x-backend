@@ -6,7 +6,6 @@ import { jwtConstants } from 'src/constants/constants';
 import { UserDocumentsController } from './user-documents.controller';
 import { UserDocumentsService } from './user-documents.service';
 import { AwsConfigService } from 'src/config/aws.config';
-import { ConfigService } from 'aws-sdk';
 import { ConfigModule } from '@nestjs/config';
 import { UserDocument } from './entity/user-documents.entity';
 

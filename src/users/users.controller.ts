@@ -42,7 +42,7 @@ export class UsersController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse()
-  async getUser( @Headers('Authorization') authorizationHeader: string,): Promise<any> {
+  async getUser( @Headers('Authorization') authorizationHeader: string): Promise<any> {
       return this.usersService.getUser(authorizationHeader);
   }
 
