@@ -3,7 +3,7 @@ import { check } from 'prettier';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { jwtConstants } from 'src/constants/constants';
 import Order, { CaptureOrder } from './dto/order.interface';
-import { Currency } from 'src/enums/role.enum';
+import { Currency, Status } from 'src/enums/role.enum';
 import { CreateCheckoutSessionDto } from './dto/create-checkout-session.dto/create-checkout-session.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
@@ -46,7 +46,7 @@ export class TamaraService {
 
   async createCheckoutSession(createCheckoutSessionDto: CreateCheckoutSessionDto) {
     try {
-      let user = await this.usersService.getUserByEmail(createCheckoutSessionDto.email);
+      // let user = await this.usersService.getUserByEmail(createCheckoutSessionDto.email);
 
       let { data, isSuccess } = await this.motorQuoteService.findQuotationById(createCheckoutSessionDto.order_id);
   
@@ -62,22 +62,19 @@ export class TamaraService {
         console.log('Response:', response.data);
   
         // Save information in the database
-        try {
-          await this.saveCheckoutSessionInDatabase(createCheckoutSessionDto , response.data);
-        } catch (error) {
-          return {
-            "statusCode": 400,
-            "message": "Internal Error",
-            "error": "Bad Request"
-          };
+        let res =   await this.saveCheckoutSessionInDatabase(createCheckoutSessionDto , response.data);
+        
+        if(res.isSuccess){
+          return response.data;
+        }else{
+          return res;
         }
   
-        return response.data;
       } else {
         return {
           "statusCode": 400,
-          "message": "NO Quotation founded",
-          "error": "Bad Request"
+          "message": "No Quotation found. Try to get new Quotation",
+          'isSuccess': false,
         };
       }
     } catch (error) {
@@ -185,37 +182,57 @@ export class TamaraService {
   }
 
 
-  
-  async saveCheckoutSessionInDatabase(createCheckoutSessionDto: CreateCheckoutSessionDto, response : ResponseCreateCheckoutSessionDto): Promise<void> {
+  async saveCheckoutSessionInDatabase(createCheckoutSessionDto: CreateCheckoutSessionDto, response: ResponseCreateCheckoutSessionDto): Promise<any> {
     try {
-      // Create a new instance of the OrderEntity
-      const order = new OrderEntity();
-      // order.userId = user.userId;
+        // Check if an order with the same quoteId and status "Paid" already exists
+        const existingOrder = await this.orderRepository.findOne({ where: { quoteId: createCheckoutSessionDto.order_id, status: Status.Paid } });
 
-      order.quoteId = createCheckoutSessionDto?.order_id;
-      order.refId = createCheckoutSessionDto?.order_reference_id;
+        if (existingOrder) {
+          return {
+            message : 'This quotation is already Paid. Please try to generate a new quotation.',
+            isSuccess : false
+          }
+        }
 
-      order.timestamp = new Date();
-      order.userEmail = createCheckoutSessionDto.email;
-      order.orderId = response.order_id;
-      order.checkoutId = response.checkout_id;
-      order.checkoutUrl = response.checkout_url;
-      order.status = response.status;
+        // Create a new instance of the OrderEntity
+        const order = new OrderEntity();
 
-      // Save the order to the database using the 'insert' function
-      await this.orderRepository.insert(order);
+        order.quoteId = createCheckoutSessionDto?.order_id;
+        order.refId = createCheckoutSessionDto?.order_reference_id;
+
+        order.timestamp = new Date();
+        order.userEmail = createCheckoutSessionDto.email;
+        order.orderId = response.order_id;
+        order.checkoutId = response.checkout_id;
+        order.checkoutUrl = response.checkout_url;
+        order.status = response.status;
+
+        // Save the order to the database using the 'insert' function
+        await this.orderRepository.insert(order);
+        return {
+          message : 'Successful',
+          isSuccess : true
+        }
     } catch (error) {
-      // Handle database error (log or throw as needed)
-      console.error('Error saving order to the database:', error);
-      throw new Error('Unable to save order to the database');
+        // Handle database error (log or throw as needed)
+        console.error('Error saving order to the database:', error);
+        // throw new Error('Unable to save order to the database');
+        return {
+          message : 'There is an issue with this quotation. Please try again!.',
+          isSuccess : false
+        }
     }
-  }
+}
+
   
 
   async authoriseOrder(authoriseOrderDto) {
     try {
       this.tamaraApi.auth(jwtConstants.tamaraToken);
       const response = await this.tamaraApi.authoriseOrder(authoriseOrderDto);
+      const orderDetails = await this.orderRepository.findOneBy({orderId : authoriseOrderDto.order_id});
+      orderDetails.status = Status.Paid;
+      await this.orderRepository.save(orderDetails);
       return {isSuccess : true};
     } catch (error) {
       if (error.response && error.response.status === 401) {

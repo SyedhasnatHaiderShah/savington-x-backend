@@ -40,8 +40,11 @@ export class MotorInsuranceRateService {
     let message = "Quotation successfully generated."
     let isSuccess = true
 
-    const {body_type , cylinder , car_value , year , age } = payload;
-    const thirdPartyQuotation = await this.getThirdPartyQuotation(body_type, cylinder , false, true );
+    let {body_type , cylinder , car_value , year , age } = payload;
+    // if(body_type == 'SEDAN'){
+    //   body_type = 'saloon';
+    // }
+    const thirdPartyQuotation = await this.getThirdPartyQuotation(body_type.toLowerCase(), cylinder , false, true );
     
     if(!thirdPartyQuotation){
       if(!response || response.length <= 0){

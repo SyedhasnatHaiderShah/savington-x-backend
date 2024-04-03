@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { MotorQuote } from './entities/motor-quote.entity';
 import { CreateMotorQuoteDto, UpdateMotorQuoteDto } from './dto/motor-quote.dto';
 import { ResponseDto } from '../motor-insurance-rate/dto/motor-insurance-rate.dto';
+import { Status } from 'src/enums/role.enum';
 
 @Injectable()
 export class MotorQuoteService {
@@ -59,6 +60,17 @@ export class MotorQuoteService {
     return this.motorQuoteRepository.save(motorQuote);
   }
 
+  async markAsPaid(quoteId: number): Promise<Boolean> {
+    const quote = await this.motorQuoteRepository.findOneBy({ id: quoteId })
+    if (!quote) {
+      return false;
+    }
+
+    // Assuming "paid" is the status value for paid quotes
+    quote.status = Status.Paid;
+    this.motorQuoteRepository.save(quote);
+    return true
+  }
 //   async update(id: number, updateMotorQuoteDto: UpdateMotorQuoteDto): Promise<MotorQuote | undefined> {
 //     await this.motorQuoteRepository.update(id, updateMotorQuoteDto);
 //     return this.findById(id);

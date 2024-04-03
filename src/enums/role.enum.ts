@@ -5,3 +5,9 @@ export enum Role {
 export enum Currency{
   default = 'AED',
 }
+export enum Status{
+  Active = 'Active',
+  Paid = 'Paid',
+  NotPaid = 'Not Paid',
+}
+
