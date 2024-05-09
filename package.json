@@ -27,6 +27,7 @@
     "migration:revert": "npm run typeorm migration:revert"
   },
   "dependencies": {
+    "@api/docs-tam": "file:.api/apis/docs-tam",
     "@nestjs/axios": "^1.0.0",
     "@nestjs/common": "^9.4.3",
     "@nestjs/config": "^3.2.0",

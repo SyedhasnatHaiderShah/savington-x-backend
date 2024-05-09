@@ -35,11 +35,23 @@ export class TamaraService {
   async checkPaymentOptions(token , checkPaymentOptions) {
     try {
       // Implement the logic to check payment options using the Tamara API client
-      this.tamaraApi.auth(jwtConstants.tamaraToken);
-      const response = await this.tamaraApi.checkPaymentOptionsAvailability(checkPaymentOptions);
-      return response.data;
+      // this.tamaraApi.auth(jwtConstants.tamaraToken);
+      // const response = await this.tamaraApi.checkPaymentOptionsAvailability(checkPaymentOptions);      
+      // return response.data;
+
+      const options = {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          authorization: 'Bearer '+jwtConstants.tamaraToken
+        },
+        body: JSON.stringify(checkPaymentOptions)
+      };
+      const response = (await fetch('https://'+jwtConstants.url+'.tamara.co/checkout/payment-options-pre-check', options)).json();
+      return await response;
     } catch (error) {
-      console.error(error);
+      console.log("response.error" , error)
       throw error;
     }
   }
@@ -53,25 +65,38 @@ export class TamaraService {
       if (data.length >= 1 && isSuccess) {
         let quote: MotorQuote = data[0];
         let body: Order = this.createOrderBody(createCheckoutSessionDto, quote);
+        console.log('Quotation Founded' , JSON.stringify(body))
   
         // Implement the logic to create a checkout session using the Tamara API client
-        this.tamaraApi.auth(jwtConstants.tamaraToken);
-        const response = await this.tamaraApi.createCheckoutSession(body);
+        // this.tamaraApi.auth(jwtConstants.tamaraToken);
+        // const response = await this.tamaraApi.createCheckoutSession(body);
+
+        const options = {
+          method: 'POST',
+          headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            authorization: 'Bearer '+jwtConstants.tamaraToken
+          },
+          body: JSON.stringify(body)
+        };
+
+        const response = (await fetch('https://'+jwtConstants.url+'.tamara.co/checkout', options)).json();
         
         // Log response or handle it as needed
-        console.log('Response:', response.data);
+        console.log('Response:', await response);
   
         // Save information in the database
-        let res =   await this.saveCheckoutSessionInDatabase(createCheckoutSessionDto , response.data);
+        let res =   await this.saveCheckoutSessionInDatabase(createCheckoutSessionDto , await response);
         
         if(res.isSuccess){
-          return response.data;
+          return await response;
         }else{
-          return res;
+          return await res;
         }
   
       } else {
-        return {
+        return await {
           "statusCode": 400,
           "message": "No Quotation found. Try to get new Quotation",
           'isSuccess': false,
@@ -88,10 +113,10 @@ export class TamaraService {
     return {
       total_amount: { amount: quote?.quote_amount, currency: Currency.default },
       shipping_amount: { amount: '0', currency: Currency.default },
-      tax_amount: { amount: '0', currency: Currency.default },
+      tax_amount: { amount: 0, currency: Currency.default },
       order_reference_id: createCheckoutSessionDto.order_reference_id,
       order_number: quote?.id.toString(),
-      discount: {},
+      discount: {name: 'Voucher', amount: {amount: 0, currency: Currency.default}},
       items: [
         {
           name: 'Motor Insurance',
@@ -119,11 +144,17 @@ export class TamaraService {
       //   success: 'http://localhost:3000/car-insurance',
       //   notification: 'http://localhost:8000/tamara/notification',
       // },
+      // merchant_url: {
+      //   cancel: 'https://dev.savington-x.ae/car-insurance',
+      //   failure: 'https://dev.savington-x.ae/car-insurance',
+      //   success: 'https://dev.savington-x.ae/car-insurance',
+      //   notification: 'https://dev.savington-x.ae/tamara/notification',
+      // },
       merchant_url: {
-        cancel: 'https://dev.savington-x.ae/car-insurance',
-        failure: 'https://dev.savington-x.ae/car-insurance',
-        success: 'https://dev.savington-x.ae/car-insurance',
-        notification: 'https://dev.savington-x.ae/tamara/notification',
+        cancel: 'https://savington-x.ae/car-insurance',
+        failure: 'https://savington-x.ae/car-insurance',
+        success: 'https://savington-x.ae/car-insurance',
+        notification: 'https://savington-x.ae/tamara/notification',
       },
       payment_type: createCheckoutSessionDto.payment_type,
       instalments: createCheckoutSessionDto.instalments,
@@ -228,8 +259,23 @@ export class TamaraService {
 
   async authoriseOrder(authoriseOrderDto) {
     try {
-      this.tamaraApi.auth(jwtConstants.tamaraToken);
-      const response = await this.tamaraApi.authoriseOrder(authoriseOrderDto);
+      // this.tamaraApi.auth(jwtConstants.tamaraToken);
+      // const response = await this.tamaraApi.authoriseOrder(authoriseOrderDto);
+
+      // console.log('Authorize OrderDto', authoriseOrderDto)
+
+      const options = {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          authorization: 'Bearer '+jwtConstants.tamaraToken
+        }
+      };
+
+      await fetch('https://'+jwtConstants.url+'.tamara.co/orders/'+authoriseOrderDto.order_id+'/authorise', options)
+  
+
       const orderDetails = await this.orderRepository.findOneBy({orderId : authoriseOrderDto.order_id});
       orderDetails.status = Status.Paid;
       await this.orderRepository.save(orderDetails);
